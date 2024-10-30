@@ -9,9 +9,7 @@ jobs:
   test-and-build:
     name: Test & build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read # This is required for actions/checkout
-      id-token: write # This is required for requesting the JWT
+    environment: develop
     steps:
       - uses: actions/checkout@v4
 
