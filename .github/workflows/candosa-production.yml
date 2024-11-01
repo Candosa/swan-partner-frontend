@@ -1,15 +1,14 @@
-name: Build and deploy to develop
+name: Build and deploy to production
 
 on:
-  push:
-    branches:
-      - develop
+  release:
+    types: [published]
 
 jobs:
   test-build-deploy:
-    name: Test, build, and deploy to develop
+    name: Test, build, and deploy to production
     runs-on: ubuntu-latest
-    environment: develop
+    environment: production
     steps:
       - uses: actions/checkout@v4
 
@@ -60,10 +59,12 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: candosa_swan_partner_frontend
-          IMAGE_TAG: develop
+          IMAGE_TAG: production
         run: |
           docker build \
-              -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.ref_name }} \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.ref_name }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         
       - name: Log out of Amazon ECR
