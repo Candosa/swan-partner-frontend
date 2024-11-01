@@ -16,10 +16,10 @@ import { WithCurrentColor } from "@swan-io/lake/src/components/WithCurrentColor"
 import { WithPartnerAccentColor } from "@swan-io/lake/src/components/WithPartnerAccentColor";
 import { commonStyles } from "@swan-io/lake/src/constants/commonStyles";
 import { backgroundColor, colors, invariantColors } from "@swan-io/lake/src/constants/design";
-import { showToast } from "@swan-io/lake/src/state/toasts";
 import { filterRejectionsToResult } from "@swan-io/lake/src/utils/gql";
 import { trim } from "@swan-io/lake/src/utils/string";
 import { Request } from "@swan-io/request";
+import { showToast } from "@swan-io/shared-business/src/state/toasts";
 import { translateError } from "@swan-io/shared-business/src/utils/i18n";
 import { combineValidators, useForm } from "@swan-io/use-form";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ import { match, P } from "ts-pattern";
 import { AccountClosingDocument, AccountCountry, CloseAccountDocument } from "../graphql/partner";
 import { NotFoundPage } from "../pages/NotFoundPage";
 import { env } from "../utils/env";
-import { formatNestedMessage, t } from "../utils/i18n";
+import { formatNestedMessage, languages, locale, setPreferredLanguage, t } from "../utils/i18n";
 import { Router } from "../utils/routes";
 import {
   validateAccountReasonClose,
@@ -59,6 +59,9 @@ const styles = StyleSheet.create({
   },
   flex: {
     display: "flex",
+  },
+  languagesSelect: {
+    alignItems: "flex-end",
   },
 });
 
@@ -317,6 +320,11 @@ const TransferScreen = ({
     .exhaustive();
 };
 
+const languageOptions = languages.map(country => ({
+  name: country.native,
+  value: country.id,
+}));
+
 export const AccountClose = ({ accountId, resourceId, status }: Props) => {
   const [data, { setVariables }] = useQuery(AccountClosingDocument, { accountId, first: 20 });
 
@@ -388,6 +396,20 @@ export const AccountClose = ({ accountId, resourceId, status }: Props) => {
                         });
                     })
                     .toUndefined()}
+                  headerEnd={
+                    <View>
+                      <LakeSelect
+                        value={locale.language}
+                        items={languageOptions}
+                        hideErrors={true}
+                        mode="borderless"
+                        style={styles.languagesSelect}
+                        onValueChange={locale => {
+                          setPreferredLanguage(locale);
+                        }}
+                      />
+                    </View>
+                  }
                 >
                   {({ large }) =>
                     match({ accountStatus: account.statusInfo.status, balance })

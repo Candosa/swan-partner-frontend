@@ -1,8 +1,8 @@
 import { createIntl, createIntlCache } from "@formatjs/intl";
 import { Dict } from "@swan-io/boxed";
-import { FlagCode } from "@swan-io/lake/src/components/Flag";
 import { deriveUnion, memoize } from "@swan-io/lake/src/utils/function";
 import { getRifmProps } from "@swan-io/lake/src/utils/rifm";
+import { FlagCode } from "@swan-io/shared-business/src/components/Flag";
 import { DateFormat } from "@swan-io/shared-business/src/utils/i18n";
 import {
   LANGUAGE_FALLBACK,
@@ -195,7 +195,7 @@ export const formatNestedMessage = (
     params,
   );
 
-  const resultArray: (string | ReactElement)[] = typeof result === "string" ? [result] : result;
+  const resultArray: (string | ReactElement)[] = Array.isArray(result) ? result : [result];
 
   return resultArray.map((item, index) =>
     isValidElement(item) ? cloneElement(item, { key: `t-${key}-${index}` }) : item,

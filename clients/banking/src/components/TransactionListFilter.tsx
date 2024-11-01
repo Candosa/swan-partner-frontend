@@ -2,16 +2,16 @@ import { Dict, Future } from "@swan-io/boxed";
 import { Box } from "@swan-io/lake/src/components/Box";
 import { Fill } from "@swan-io/lake/src/components/Fill";
 import { FilterChooser } from "@swan-io/lake/src/components/FilterChooser";
+import { LakeButton } from "@swan-io/lake/src/components/LakeButton";
+import { LakeSearchField } from "@swan-io/lake/src/components/LakeSearchField";
+import { Space } from "@swan-io/lake/src/components/Space";
+import { emptyToUndefined, isNotNullish } from "@swan-io/lake/src/utils/nullish";
 import {
   FilterCheckboxDef,
   FilterDateDef,
   FiltersStack,
   FiltersState,
-} from "@swan-io/lake/src/components/Filters";
-import { LakeButton } from "@swan-io/lake/src/components/LakeButton";
-import { LakeSearchField } from "@swan-io/lake/src/components/LakeSearchField";
-import { Space } from "@swan-io/lake/src/components/Space";
-import { emptyToUndefined, isNotNullish } from "@swan-io/lake/src/utils/nullish";
+} from "@swan-io/shared-business/src/components/Filters";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { TransactionStatus } from "../graphql/partner";
 import { locale, t } from "../utils/i18n";
@@ -49,7 +49,6 @@ type SimplifiedPaymentProduct = "Card" | "Check" | "Fees" | "CreditTransfer" | "
 const paymentProductFilter: FilterCheckboxDef<SimplifiedPaymentProduct> = {
   type: "checkbox",
   label: t("transactionList.filter.paymentMethod"),
-  submitText: t("common.filters.apply"),
   checkAllLabel: t("common.filters.all"),
   items: [
     { value: "Card", label: t("paymentMethod.card") },
@@ -63,7 +62,6 @@ const paymentProductFilter: FilterCheckboxDef<SimplifiedPaymentProduct> = {
 const statusFilter: FilterCheckboxDef<TransactionStatus> = {
   type: "checkbox",
   label: t("transactionList.filter.status"),
-  submitText: t("common.filters.apply"),
   checkAllLabel: t("common.filters.all"),
   items: [
     { value: "Pending", label: t("transactionStatus.pending") },
